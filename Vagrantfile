@@ -21,4 +21,18 @@ Vagrant.configure("2") do |config|
       end
     end
   end
+
+  (0..2).each do |i|
+    config.vm.define "worker-" + i.to_s do |machine|
+      machine.vm.provider "qemu" do |qe|
+        qe.ssh_port = 50122 + i
+        qe.extra_qemu_args = [
+          "-device", "virtio-net-device,netdev=net0",
+          "-netdev", "user,id=net0,hostfwd=tcp::" + (50122 + i).to_s + "-:22",
+          "--device", "virtio-net-pci,netdev=net1,mac=10:E3:BF:36:47:8" + i.to_s,
+          "--netdev", "vmnet-shared,id=net1"
+        ]
+      end
+    end
+  end
 end
