@@ -8,9 +8,9 @@ Vagrant.configure("2") do |config|
     qe.net_device = nil
   end
 
-    config.vm.define "controller-" + i.to_s do |controller|
-      controller.vm.provider "qemu" do |qe|
   (0..2).each do |i|
+    config.vm.define "controller-" + i.to_s do |machine|
+      machine.vm.provider "qemu" do |qe|
         qe.ssh_port = 50022 + i
         qe.extra_qemu_args = [
           "-device", "virtio-net-device,netdev=net0",
